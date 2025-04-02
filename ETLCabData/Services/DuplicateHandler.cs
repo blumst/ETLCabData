@@ -6,12 +6,15 @@ namespace ETLCabData.Services
 {
     public static class DuplicateHandler
     {
+        // Removes duplicate records based on pickup/dropoff datetime and passenger count.
+        // Returns unique records and outputs duplicates via the out parameter.
         public static List<CabTrip> RemoveDuplicates(IEnumerable<CabTrip> trips, out List<CabTrip> duplicates)
         {
             var uniqueTrips = new List<CabTrip>();
             duplicates = new List<CabTrip>();
             var seenKeys = new HashSet<string>();
 
+            // Generate a key for each record and check for duplicates
             foreach (var trip in trips)
             {
                 string key = $"{trip.TpepPickupDatetime}-{trip.TpepDropoffDatetime}-{trip.PassengerCount}";

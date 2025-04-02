@@ -10,6 +10,7 @@ namespace ETLCabData.Services
 
             record.StoreAndFwdFlag = record.StoreAndFwdFlag == "Y" ? "Yes" : "No";
 
+            // Convert timestamps from EST to UTC
             TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             record.TpepPickupDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepPickupDatetime, estZone);
             record.TpepDropoffDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepDropoffDatetime, estZone);

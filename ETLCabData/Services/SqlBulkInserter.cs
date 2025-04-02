@@ -6,9 +6,11 @@ namespace ETLCabData.Services
 {
     public class SqlBulkInserter
     {
+        // Performs bulk insertion of CabTrip records into SQL Server using SqlBulkCopy
         public void BulkInsert(string connectionString, List<CabTrip> trips)
         {
             DataTable table = new();
+
             table.Columns.Add("tpep_pickup_datetime", typeof(DateTime));
             table.Columns.Add("tpep_dropoff_datetime", typeof(DateTime));
             table.Columns.Add("passenger_count", typeof(byte));
@@ -37,6 +39,7 @@ namespace ETLCabData.Services
             using var connection = new SqlConnection(connectionString);
             connection.Open();
 
+            // Initialize SqlBulkCopy to efficiently insert data
             using var bulkCopy = new SqlBulkCopy(connection);
             bulkCopy.DestinationTableName = "dbo.CabTrips";
 
@@ -50,6 +53,7 @@ namespace ETLCabData.Services
             bulkCopy.ColumnMappings.Add("fare_amount", "fare_amount");
             bulkCopy.ColumnMappings.Add("tip_amount", "tip_amount");
 
+            // Write the DataTable data to the SQL Server table
             bulkCopy.WriteToServer(table);
         }
     }

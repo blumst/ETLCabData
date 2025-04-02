@@ -15,20 +15,37 @@ namespace ETLCabData
 
             string connectionString = configuration.GetConnectionString("CabDataDb");
 
+            // Define file paths for input CSV and duplicates output
             string csvFilePath = "sample-cab-data.csv";
             string duplicatesFilePath = "duplicates.csv";
 
-            var csvProcessor = new CsvProcessor();
-            IEnumerable<CabTrip> records = csvProcessor.ReadCsv(csvFilePath);
+            if (!File.Exists(csvFilePath))
+            {
+                Console.WriteLine("CSV file not found: " + csvFilePath);
+                return;
+            }
 
-            List<CabTrip> uniqueRecords = DuplicateHandler.RemoveDuplicates(records, out List<CabTrip> duplicates);
+            try
+            {
+                // Read CSV data and transform each record
+                var csvProcessor = new CsvProcessor();
+                IEnumerable<CabTrip> records = csvProcessor.ReadCsv(csvFilePath);
 
-            DuplicateHandler.WriteDuplicates(duplicatesFilePath, duplicates);
+                // Remove duplicate records based on defined key and capture duplicates
+                List<CabTrip> uniqueRecords = DuplicateHandler.RemoveDuplicates(records, out List<CabTrip> duplicates);
 
-            var bulkInserter = new SqlBulkInserter();
-            bulkInserter.BulkInsert(connectionString, uniqueRecords);
+                DuplicateHandler.WriteDuplicates(duplicatesFilePath, duplicates);
 
-            Console.WriteLine($"Successfully loaded {uniqueRecords.Count} unique records into the database.");
+                // Perform bulk insertion of unique records into the SQL database
+                var bulkInserter = new SqlBulkInserter();
+                bulkInserter.BulkInsert(connectionString, uniqueRecords);
+
+                Console.WriteLine($"Successfully loaded {uniqueRecords.Count} unique records into the database.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }
