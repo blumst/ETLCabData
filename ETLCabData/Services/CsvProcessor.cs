@@ -24,6 +24,7 @@ namespace ETLCabData.Services
 
     public class CsvProcessor
     {
+        // Reads CSV file and transforms each record using DataTransformer
         public IEnumerable<CabTrip> ReadCsv(string filePath)
         {
             var transformer = new DataTransformer();
@@ -33,6 +34,7 @@ namespace ETLCabData.Services
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             csv.Context.RegisterClassMap<CabTripMap>();
 
+            // Iterate over each record, transform it and yield return
             foreach (var record in csv.GetRecords<CabTrip>())
                 yield return transformer.Transform(record);
         }
