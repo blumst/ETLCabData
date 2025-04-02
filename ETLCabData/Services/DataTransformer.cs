@@ -6,6 +6,8 @@ namespace ETLCabData.Services
     {
         public CabTrip Transform(CabTrip record)
         {
+            record.PassengerCount ??= 0;
+
             record.StoreAndFwdFlag = record.StoreAndFwdFlag.Trim();
 
             record.StoreAndFwdFlag = record.StoreAndFwdFlag == "Y" ? "Yes" : "No";
