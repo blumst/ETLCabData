@@ -11,8 +11,8 @@ namespace ETLCabData.Services
             record.StoreAndFwdFlag = record.StoreAndFwdFlag == "Y" ? "Yes" : "No";
 
             TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-            record.TpepPickupDatetime = TimeZoneInfo.ConvertTimeFromUtc(record.TpepPickupDatetime, estZone);
-            record.TpepDropoffDatetime = TimeZoneInfo.ConvertTimeFromUtc(record.TpepDropoffDatetime, estZone);
+            record.TpepPickupDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepPickupDatetime, estZone);
+            record.TpepDropoffDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepDropoffDatetime, estZone);
 
             return record;
         }
