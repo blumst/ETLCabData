@@ -9,7 +9,7 @@ Create a SQL Server database named `CabDataDB`. Then, run the SQL script provide
 
 3. Configuration:
 
-The repository includes an appsettings.json file. Update the connection string if needed.
+The repository includes an `appsettings.json file`. Update the connection string if needed.
 
 3. Running the ETL Process:
 
@@ -19,8 +19,8 @@ The repository includes an appsettings.json file. Update the connection string i
 
   Read and transform data from the CSV.
 
-  Remove duplicate records (saving them in duplicates.csv).
+  Remove duplicate records (saving them in `duplicates.csv`).
 
-  Bulk insert unique records into the CabTrips table.
+  Bulk insert unique records into the `CabTrips` table.
 
   The console will output a success message with the count of unique records loaded.
