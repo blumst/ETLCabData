@@ -5,7 +5,7 @@ ETLCabData is a C# .NET ETL project that imports taxi trip data from a CSV file 
 **Setup and Usage**
 1. Database Setup:
 
-Create a SQL Server database named `CabDataDB`. Then, run the SQL script provided in [CreateCabTrips.sql](sql/CreateCabTrips.sql) using SQL Server Management Studio (SSMS) to create the `CabTrips` table.
+Create a SQL Server database named `CabDataDB`. Then, run the SQL script provided in [CreateCabTrips.sql](ETLCabData/sql/CreateCabTrips.sql) using SQL Server Management Studio (SSMS) to create the `CabTrips` table.
 
 3. Configuration:
 
