@@ -16,8 +16,8 @@ namespace ETLCabData
             string connectionString = configuration.GetConnectionString("CabDataDb");
 
             // Define file paths for input CSV and duplicates output
-            string csvFilePath = "sample-cab-data.csv";
-            string duplicatesFilePath = "duplicates.csv";
+            const string csvFilePath = "sample-cab-data.csv";
+            const string duplicatesFilePath = "duplicates.csv";
 
             if (!File.Exists(csvFilePath))
             {
@@ -27,18 +27,19 @@ namespace ETLCabData
 
             try
             {
-                // Read CSV data and transform each record
-                var csvProcessor = new CsvProcessor();
+                IDataTransformer transformer = new DataTransformer();
+                ICsvProcessor csvProcessor = new CsvProcessor(transformer);
+                IDuplicateHandler duplicateHandler = new DuplicateHandler();
+                IDbInserter dbInserter = new SqlBulkInserter();
+
+                // Read CSV, transform records, and remove duplicates.
                 IEnumerable<CabTrip> records = csvProcessor.ReadCsv(csvFilePath);
+                List<CabTrip> uniqueRecords = duplicateHandler.RemoveDuplicates(records, out List<CabTrip> duplicates);
 
-                // Remove duplicate records based on defined key and capture duplicates
-                List<CabTrip> uniqueRecords = DuplicateHandler.RemoveDuplicates(records, out List<CabTrip> duplicates);
+                duplicateHandler.WriteDuplicates(duplicatesFilePath, duplicates);
 
-                DuplicateHandler.WriteDuplicates(duplicatesFilePath, duplicates);
-
-                // Perform bulk insertion of unique records into the SQL database
-                var bulkInserter = new SqlBulkInserter();
-                bulkInserter.BulkInsert(connectionString, uniqueRecords);
+                // Bulk insert unique records into the SQL database.
+                dbInserter.BulkInsert(connectionString, uniqueRecords);
 
                 Console.WriteLine($"Successfully loaded {uniqueRecords.Count} unique records into the database.");
             }

@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace ETLCabData.Services
 {
-    public class SqlBulkInserter
+    public class SqlBulkInserter : IDbInserter
     {
         // Performs bulk insertion of CabTrip records into SQL Server using SqlBulkCopy
         public void BulkInsert(string connectionString, List<CabTrip> trips)

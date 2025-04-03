@@ -22,13 +22,13 @@ namespace ETLCabData.Services
         }
     }
 
-    public class CsvProcessor
+    public class CsvProcessor(IDataTransformer transformer) : ICsvProcessor
     {
         // Reads CSV file and transforms each record using DataTransformer
+        private readonly IDataTransformer _transformer = transformer;
+
         public IEnumerable<CabTrip> ReadCsv(string filePath)
         {
-            var transformer = new DataTransformer();
-
             using var reader = new StreamReader(filePath);
 
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
@@ -36,7 +36,7 @@ namespace ETLCabData.Services
 
             // Iterate over each record, transform it and yield return
             foreach (var record in csv.GetRecords<CabTrip>())
-                yield return transformer.Transform(record);
+                yield return _transformer.Transform(record);
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Globalization;
 
 namespace ETLCabData.Services
 {
-    public static class DuplicateHandler
+    public class DuplicateHandler : IDuplicateHandler
     {
         // Removes duplicate records based on pickup/dropoff datetime and passenger count.
         // Returns unique records and outputs duplicates via the out parameter.
-        public static List<CabTrip> RemoveDuplicates(IEnumerable<CabTrip> trips, out List<CabTrip> duplicates)
+        public List<CabTrip> RemoveDuplicates(IEnumerable<CabTrip> trips, out List<CabTrip> duplicates)
         {
             var uniqueTrips = new List<CabTrip>();
             duplicates = new List<CabTrip>();
@@ -28,7 +28,7 @@ namespace ETLCabData.Services
             return uniqueTrips;
         }
 
-        public static void WriteDuplicates(string filePath, List<CabTrip> duplicates)
+        public void WriteDuplicates(string filePath, List<CabTrip> duplicates)
         {
             using var writer = new StreamWriter(filePath);
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);

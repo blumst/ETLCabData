@@ -2,7 +2,7 @@
 
 namespace ETLCabData.Services
 {
-    public class DataTransformer
+    public class DataTransformer : IDataTransformer
     {
         public CabTrip Transform(CabTrip record)
         {
@@ -10,10 +10,10 @@ namespace ETLCabData.Services
 
             record.StoreAndFwdFlag = record.StoreAndFwdFlag.Trim();
 
-            record.StoreAndFwdFlag = record.StoreAndFwdFlag == "Y" ? "Yes" : "No";
+            record.StoreAndFwdFlag = record.StoreAndFwdFlag == "Y" ? Constants.YesValue : Constants.NoValue;
 
             // Convert timestamps from EST to UTC
-            TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            TimeZoneInfo estZone = TimeZoneInfo.FindSystemTimeZoneById(Constants.EasternTimeZoneId);
             record.TpepPickupDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepPickupDatetime, estZone);
             record.TpepDropoffDatetime = TimeZoneInfo.ConvertTimeToUtc(record.TpepDropoffDatetime, estZone);
 
